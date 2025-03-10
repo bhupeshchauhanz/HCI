@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Admission Registration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 200px;
+            height: auto;
+            margin: 0 auto;
+            animation: bounceIn 1.5s;
+            transition: transform 0.3s ease;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+            animation: slideInDown 1s;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            animation: fadeInUp 0.5s;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #34495e;
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-row > div {
+            flex: 1;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(41, 128, 185, 0.3);
+        }
+
+        .required::after {
+            content: "*";
+            color: #e74c3c;
+            margin-left: 3px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <div class="logo animate__animated animate__bounceIn">
+                <img src="Sharda-Logo.png" alt="Sharda University Logo">
+            </div>
+        </div>
+        <h1 class="animate__animated animate__slideInDown">University Admission Registration</h1>
+        <form id="registrationForm" onsubmit="return validateForm(event)">
+            <!-- Personal Information -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="required" for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                </div>
+                <div class="form-group">
+                    <label class="required" for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="required" for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                    <div class="error-message" id="emailError"></div>
+                </div>
+                <div class="form-group">
+                    <label class="required" for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required>
+                    <div class="error-message" id="phoneError"></div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="required" for="dob">Date of Birth</label>
+                    <input type="date" id="dob" name="dob" required>
+                </div>
+                <div class="form-group">
+                    <label class="required" for="gender">Gender</label>
+                    <select id="gender" name="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Academic Information -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="required" for="program">Desired Program</label>
+                    <select id="program" name="program" required>
+                        <option value="">Select Program</option>
+                        <option value="cs">Computer Science Engineering</option>
+                        <option value="engineering">Mechanical Engineering</option>
+                        <option value="business">Business Administration</option>
+                        <option value="arts">Arts</option>
+                        <option value="medicine">Medicine</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="required" for="semester">Starting Semester</label>
+                    <select id="semester" name="semester" required>
+                        <option value="">Select Semester</option>
+                        <option value="fall2025">Fall 2025</option>
+                        <option value="spring2025">Spring 2025</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="required" for="previousSchool">Previous School/University</label>
+                <input type="text" id="previousSchool" name="previousSchool" required>
+            </div>
+
+            <div class="form-group">
+                <label class="required" for="percentage">Class 12th Percentage</label>
+                <input type="number" id="percentage" name="percentage" step="0.01" min="65" max="100" required>
+                <div class="error-message" id="percentageError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address</label>
+                <textarea id="address" name="address" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="animate__animated animate__pulse">Submit Application</button>
+        </form>
+    </div>
+
+    <script>
+        function validateForm(event) {
+            event.preventDefault();
+            
+            // Basic form validation
+            const form = document.getElementById('registrationForm');
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const percentage = document.getElementById('percentage').value;
+            let isValid = true;
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const emailError = document.getElementById('emailError');
+            if (!emailRegex.test(email)) {
+                emailError.textContent = 'Please enter a valid email address';
+                emailError.style.display = 'block';
+                isValid = false;
+            } else {
+                emailError.style.display = 'none';
+            }
+
+            // Phone validation
+            const phoneRegex = /^\d{10}$/;
+            const phoneError = document.getElementById('phoneError');
+            if (!phoneRegex.test(phone.replace(/\D/g, ''))) {
+                phoneError.textContent = 'Please enter a valid 10-digit phone number';
+                phoneError.style.display = 'block';
+                isValid = false;
+            } else {
+                phoneError.style.display = 'none';
+            }
+
+            // Percentage validation
+            const percentageError = document.getElementById('percentageError');
+            if (percentage < 65 || percentage > 100) {
+                percentageError.textContent = 'We accept students with Class 12th percentage above 65%';
+                percentageError.style.display = 'block';
+                isValid = false;
+            } else {
+                percentageError.style.display = 'none';
+            }
+
+            // If validation passes, show success message
+            if (isValid) {
+                alert('Registration submitted successfully!');
+                form.reset();
+            }
+            return false;
+        }
+
+        // Add animation to form groups on scroll
+        const formGroups = document.querySelectorAll('.form-group');
+        formGroups.forEach((group, index) => {
+            group.style.animationDelay = `${index * 0.1}s`;
+        });
+    </script>
+</body>
+</html>

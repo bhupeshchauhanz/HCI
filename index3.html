@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Grade Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #2193b0, #6dd5ed);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: white;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 90%;
+            max-width: 500px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            position: relative;
+            color: #ffffff;
+            animation: slideDown 0.8s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .title::after {
+            content: '📚';
+            position: absolute;
+            margin-left: 8px;
+            font-size: 1.8rem;
+            animation: bounce 1s ease infinite;
+        }
+
+        .student-info {
+            margin-bottom: 1.5rem;
+            animation: slideRight 0.8s ease;
+        }
+
+        @keyframes slideRight {
+            from {
+                transform: translateX(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 1rem;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-field:focus {
+            border-color: #ffffff;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .subjects {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            animation: slideLeft 0.8s ease;
+        }
+
+        @keyframes slideLeft {
+            from {
+                transform: translateX(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .subject-input {
+            position: relative;
+        }
+
+        .subject-input label {
+            font-weight: 500;
+            color: #ffffff;
+            margin-bottom: 0.4rem;
+            display: block;
+            font-size: 0.95rem;
+        }
+
+        .subject-input input {
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .subject-input input:focus {
+            border-color: #ffffff;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Hide number input spinners for Chrome, Safari, Edge, Opera */
+        .subject-input input::-webkit-outer-spin-button,
+        .subject-input input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            appearance: none;
+            margin: 0;
+        }
+
+        /* Hide number input spinners for Firefox */
+        .subject-input input[type=number] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #00b4db, #0083b0);
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1.2rem;
+            position: relative;
+            overflow: hidden;
+            font-weight: 600;
+            animation: slideUp 0.8s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #0083b0, #00b4db);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 0.8s ease;
+            max-height: 0;
+            overflow: hidden;
+            margin-top: 0;
+        }
+
+        .result.show {
+            opacity: 1;
+            transform: translateY(0);
+            animation: scaleIn 0.5s ease;
+            max-height: 500px;
+            margin-top: 1rem;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .grade {
+            font-size: 3.2rem;
+            font-weight: bold;
+            margin: 0.8rem 0;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            animation: pulseGrade 2s infinite;
+        }
+
+        @keyframes pulseGrade {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .percentage {
+            font-size: 1.4rem;
+            color: #ffffff;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+
+        .remarks {
+            font-size: 1.2rem;
+            color: #ffffff;
+            font-weight: 500;
+            padding: 0.8rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-top: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+                width: 95%;
+            }
+
+            .title {
+                font-size: 1.5rem;
+                margin-bottom: 1.2rem;
+            }
+
+            .input-group {
+                margin-bottom: 0.8rem;
+            }
+
+            .subjects {
+                gap: 0.8rem;
+                margin-bottom: 1.2rem;
+            }
+
+            .calculate-btn {
+                padding: 0.8rem;
+                font-size: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .result {
+                padding: 1.2rem;
+            }
+
+            .grade {
+                font-size: 2.2rem;
+            }
+
+            .percentage {
+                font-size: 1.1rem;
+            }
+
+            .remarks {
+                font-size: 0.95rem;
+                padding: 0.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Grade Calculator</h1>
+        
+        <div class="student-info">
+            <div class="input-group">
+                <label for="student-name">Student Name</label>
+                <input type="text" id="student-name" class="input-field" placeholder="Enter student name">
+            </div>
+        </div>
+
+        <div class="subjects">
+            <div class="subject-input">
+                <label>Database Management System</label>
+                <input type="number" id="dbms" placeholder="Enter marks" min="0" max="100">
+            </div>
+            <div class="subject-input">
+                <label>Graph Theory</label>
+                <input type="number" id="graph" placeholder="Enter marks" min="0" max="100">
+            </div>
+            <div class="subject-input">
+                <label>Human Computer Interaction</label>
+                <input type="number" id="hci" placeholder="Enter marks" min="0" max="100">
+            </div>
+            <div class="subject-input">
+                <label>Project based Learning-2</label>
+                <input type="number" id="pbl" placeholder="Enter marks" min="0" max="100">
+            </div>
+            <div class="subject-input">
+                <label>Ethics in Engineering Practice</label>
+                <input type="number" id="ethics" placeholder="Enter marks" min="0" max="100">
+            </div>
+        </div>
+
+        <button class="calculate-btn" onclick="calculateGrade()">Calculate Grade</button>
+
+        <div class="result" id="result">
+            <div class="percentage" id="percentage">Overall Percentage: 0%</div>
+            <div class="grade" id="grade">Grade: -</div>
+            <div class="remarks" id="remarks">Enter marks to calculate grade</div>
+        </div>
+    </div>
+
+    <script>
+        function calculateGrade() {
+            const name = document.getElementById('student-name').value;
+            const dbms = parseFloat(document.getElementById('dbms').value) || 0;
+            const graph = parseFloat(document.getElementById('graph').value) || 0;
+            const hci = parseFloat(document.getElementById('hci').value) || 0;
+            const pbl = parseFloat(document.getElementById('pbl').value) || 0;
+            const ethics = parseFloat(document.getElementById('ethics').value) || 0;
+
+            if (!name) {
+                showResult('Please enter student name', '-', 'Enter all required information', false);
+                return;
+            }
+
+            const subjects = [dbms, graph, hci, pbl, ethics];
+            const invalidMarks = subjects.some(mark => mark < 0 || mark > 100);
+            
+            if (invalidMarks) {
+                showResult('Invalid Marks', '-', 'Marks should be between 0 and 100', false);
+                return;
+            }
+
+            const total = subjects.reduce((sum, mark) => sum + mark, 0);
+            const percentage = total / subjects.length;
+            let grade, remarks;
+
+            if (percentage >= 90) {
+                grade = 'A+';
+                remarks = 'Outstanding Performance! 🌟';
+            } else if (percentage >= 80) {
+                grade = 'A';
+                remarks = 'Excellent Work! 👏';
+            } else if (percentage >= 70) {
+                grade = 'B';
+                remarks = 'Good Job! 👍';
+            } else if (percentage >= 60) {
+                grade = 'C';
+                remarks = 'Fair Performance';
+            } else if (percentage >= 50) {
+                grade = 'D';
+                remarks = 'Needs Improvement';
+            } else {
+                grade = 'F';
+                remarks = 'Must Work Harder';
+            }
+
+            showResult(percentage.toFixed(2) + '%', grade, remarks, true);
+        }
+
+        function showResult(percentage, grade, remarks, isSuccess) {
+            const resultDiv = document.getElementById('result');
+            const percentageDiv = document.getElementById('percentage');
+            const gradeDiv = document.getElementById('grade');
+            const remarksDiv = document.getElementById('remarks');
+
+            percentageDiv.textContent = `Overall Percentage: ${percentage}`;
+            gradeDiv.textContent = `Grade: ${grade}`;
+            remarksDiv.textContent = remarks;
+
+            // Remove show class first to reset animation
+            resultDiv.classList.remove('show');
+            
+            // Force a reflow
+            void resultDiv.offsetWidth;
+            
+            // Add show class to trigger animation
+            resultDiv.classList.add('show');
+
+            // Add ripple effect to button
+            const button = event.currentTarget;
+            const ripple = document.createElement('span');
+            ripple.style.position = 'absolute';
+            ripple.style.top = '50%';
+            ripple.style.left = '50%';
+            ripple.style.transform = 'translate(-50%, -50%)';
+            ripple.style.width = '0';
+            ripple.style.height = '0';
+            ripple.style.background = 'rgba(255, 255, 255, 0.3)';
+            ripple.style.borderRadius = '50%';
+            ripple.style.transition = 'all 0.6s ease';
+            button.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.style.width = '200%';
+                ripple.style.height = '200%';
+                ripple.style.opacity = '0';
+            }, 0);
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        }
+
+        // Add input animations
+        const inputs = document.querySelectorAll('.input-field, .subject-input input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.style.transform = 'translateY(-5px) scale(1.02)';
+                input.style.boxShadow = '0 0 20px rgba(255, 255, 255, 0.2)';
+            });
+
+            input.addEventListener('blur', () => {
+                input.parentElement.style.transform = 'translateY(0) scale(1)';
+                input.style.boxShadow = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
+
