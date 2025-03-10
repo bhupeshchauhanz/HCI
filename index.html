@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HCI Lab Experiments</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-image: linear-gradient(310deg, rgba(131, 131, 131,0.02) 0%, rgba(131, 131, 131,0.02) 13%,transparent 13%, transparent 46%,rgba(112, 112, 112,0.02) 46%, rgba(112, 112, 112,0.02) 100%),linear-gradient(21deg, rgba(18, 18, 18,0.02) 0%, rgba(18, 18, 18,0.02) 47%,transparent 47%, transparent 82%,rgba(178, 178, 178,0.02) 82%, rgba(178, 178, 178,0.02) 100%),linear-gradient(90deg, rgb(255,255,255),rgb(255,255,255));
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            margin: 0 auto;
+            max-width: 1400px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: fadeIn 1s ease-in;
+            padding: 1rem 0;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            font-weight: 700;
+        }
+
+        .header h2 {
+            font-size: 2.2rem;
+            color: #34495e;
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+        }
+
+        .experiments-container {
+            position: relative;
+            width: 100%;
+            padding: 0 80px;
+            margin: 0 auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .experiments-scroll {
+            display: flex;
+            gap: 2rem;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 1rem 0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            width: 100%;
+            padding-left: 2rem;
+            padding-right: 2rem;
+            cursor: grab;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x mandatory;
+            scroll-padding: 0 2rem;
+        }
+
+        .experiments-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .experiment-btn {
+            flex: 0 0 300px;
+            aspect-ratio: 1;
+            background: white;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 0.5s ease-out;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .experiment-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .experiment-btn .unit-indicator {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .experiment-btn:hover .unit-indicator {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+        }
+
+        .experiment-btn .unit-indicator::before {
+            content: '';
+            position: absolute;
+            left: -1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 0;
+            background: linear-gradient(to bottom, #3498db, #2980b9);
+            transition: height 0.3s ease;
+        }
+
+        .experiment-btn:hover .unit-indicator::before {
+            height: 100%;
+        }
+
+        .experiment-btn .unit-indicator span {
+            color: white;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .experiment-btn .title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .experiment-btn .subtitle {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.4;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        .scroll-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+            z-index: 2;
+            opacity: 1;
+            visibility: visible;
+            font-family: "SF Pro Icons", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        .scroll-btn.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .scroll-btn:hover {
+            background: #f8f9fa;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .scroll-btn.prev {
+            left: 10px;
+        }
+
+        .scroll-btn.next {
+            right: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .experiment-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .experiment-btn:hover::before {
+            left: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .experiments-container {
+                padding: 0 60px;
+            }
+            
+            .experiment-btn {
+                flex: 0 0 250px;
+            }
+            
+            .scroll-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Human Computer Interaction Lab</h1>
+            <h2>List of Experiments</h2>
+        </div>
+        <div class="experiments-container">
+            <button class="scroll-btn prev" onclick="scrollExperiments('left')">❮</button>
+            <div class="experiments-scroll">
+                <button class="experiment-btn" onclick="window.location.href='index1.html'">
+                    <div class="unit-indicator">Unit <span>1</span></div>
+                    <span class="title">Experiment 1</span>
+                    <span class="subtitle">Introduction to tool and design an interface for welcome screen.</span>
+                </button>
+                <button class="experiment-btn" onclick="window.location.href='index2.html'">
+                    <div class="unit-indicator">Unit <span>1</span></div>
+                    <span class="title">Experiment 2</span>
+                    <span class="subtitle">Design an interface for multiplication and addition of any two numbers.</span>
+                </button>
+                <button class="experiment-btn" onclick="window.location.href='index3.html'">
+                    <div class="unit-indicator">Unit <span>2</span></div>
+                    <span class="title">Experiment 3</span>
+                    <span class="subtitle">Design a user interface for assigning a grade to students based on the subject marks.</span>
+                </button>
+                <button class="experiment-btn" onclick="window.location.href='index4.html'">
+                    <div class="unit-indicator">Unit <span>2</span></div>
+                    <span class="title">Experiment 4</span>
+                    <span class="subtitle">Design a user interface for printing the numbers in:<br>
+                        a) Ascending order<br>
+                        b) Descending order</span>
+                </button>
+                <button class="experiment-btn" onclick="window.location.href='index5.html'">
+                    <div class="unit-indicator">Unit <span>3</span></div>
+                    <span class="title">Experiment 5</span>
+                    <span class="subtitle">Design a user interface for registration of students for admission.</span>
+                </button>
+                <button class="experiment-btn" onclick="window.location.href='index6.html'">
+                    <div class="unit-indicator">Unit <span>3</span></div>
+                    <span class="title">Experiment 6</span>
+                    <span class="subtitle">Design a user interface for displaying and changing of picture on the form.</span>
+                </button>
+                <button class="experiment-btn" onclick="window.location.href='index7.html'">
+                    <div class="unit-indicator">Unit <span>4</span></div>
+                    <span class="title">Experiment 7</span>
+                    <span class="subtitle">Design a user interface for a menu-based program.</span>
+                </button>
+                <button class="experiment-btn" onclick="window.location.href='index8.html'">
+                    <div class="unit-indicator">Unit <span>4</span></div>
+                    <span class="title">Experiment 8</span>
+                    <span class="subtitle">Design a user interface for a mathematical and scientific calculator.</span>
+                </button>
+                <button class="experiment-btn" onclick="window.location.href='index9.html'">
+                    <div class="unit-indicator">Unit <span>5</span></div>
+                    <span class="title">Experiment 9</span>
+                    <span class="subtitle">Design a user interface for a reservation system (e.g., bus/flight/railways, etc.).</span>
+                </button>
+                <button class="experiment-btn" onclick="window.location.href='index10.html'">
+                    <div class="unit-indicator">Unit <span>5</span></div>
+                    <span class="title">Experiment 10</span>
+                    <span class="subtitle">Design and implement modules of a given application or system.</span>
+                </button>
+            </div>
+            <button class="scroll-btn next" onclick="scrollExperiments('right')">❯</button>
+        </div>
+    </div>
+
+    <script>
+        const scrollContainer = document.querySelector('.experiments-scroll');
+        const prevBtn = document.querySelector('.scroll-btn.prev');
+        const nextBtn = document.querySelector('.scroll-btn.next');
+        let isDragging = false;
+        let startX;
+        let scrollLeft;
+        let isScrolling = false;
+
+        function updateScrollButtons() {
+            const isAtStart = scrollContainer.scrollLeft <= 0;
+            const isAtEnd = scrollContainer.scrollLeft >= (scrollContainer.scrollWidth - scrollContainer.clientWidth - 1);
+            
+            prevBtn.classList.toggle('hidden', isAtStart);
+            nextBtn.classList.toggle('hidden', isAtEnd);
+        }
+
+        function scrollExperiments(direction) {
+            if (isScrolling) return;
+            isScrolling = true;
+
+            const cardWidth = 300;
+            const gap = 32;
+            const scrollAmount = cardWidth + gap;
+            
+            if (direction === 'left') {
+                scrollContainer.scrollLeft -= scrollAmount;
+            } else {
+                scrollContainer.scrollLeft += scrollAmount;
+            }
+
+            setTimeout(() => {
+                isScrolling = false;
+                updateScrollButtons();
+            }, 500);
+        }
+
+        // Mouse drag scroll with momentum
+        scrollContainer.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            scrollContainer.style.cursor = 'grabbing';
+            startX = e.pageX - scrollContainer.offsetLeft;
+            scrollLeft = scrollContainer.scrollLeft;
+        });
+
+        scrollContainer.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = e.pageX - scrollContainer.offsetLeft;
+            const walk = (x - startX) * 1.5; // Reduced multiplier for smoother drag
+            scrollContainer.scrollLeft = scrollLeft - walk;
+        });
+
+        scrollContainer.addEventListener('mouseup', () => {
+            isDragging = false;
+            scrollContainer.style.cursor = 'grab';
+            // Snap to nearest card
+            const cardWidth = 300;
+            const gap = 32;
+            const scrollAmount = cardWidth + gap;
+            const currentScroll = scrollContainer.scrollLeft;
+            const targetScroll = Math.round(currentScroll / scrollAmount) * scrollAmount;
+            
+            scrollContainer.scrollTo({
+                left: targetScroll,
+                behavior: 'smooth'
+            });
+        });
+
+        scrollContainer.addEventListener('mouseleave', () => {
+            isDragging = false;
+            scrollContainer.style.cursor = 'grab';
+        });
+
+        // Touch swipe with improved detection
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let isTouchScrolling = false;
+
+        scrollContainer.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            isTouchScrolling = true;
+        }, { passive: true });
+
+        scrollContainer.addEventListener('touchmove', (e) => {
+            if (!isTouchScrolling) return;
+            touchEndX = e.touches[0].clientX;
+        }, { passive: true });
+
+        scrollContainer.addEventListener('touchend', (e) => {
+            if (!isTouchScrolling) return;
+            
+            touchEndX = e.changedTouches[0].clientX;
+            handleSwipe();
+            isTouchScrolling = false;
+            scrollContainer.style.cursor = 'grab';
+            
+            // Snap to nearest card after swipe
+            const cardWidth = 300;
+            const gap = 32;
+            const scrollAmount = cardWidth + gap;
+            const currentScroll = scrollContainer.scrollLeft;
+            const targetScroll = Math.round(currentScroll / scrollAmount) * scrollAmount;
+            
+            scrollContainer.scrollTo({
+                left: targetScroll,
+                behavior: 'smooth'
+            });
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const swipeDistance = touchEndX - touchStartX;
+
+            if (Math.abs(swipeDistance) > swipeThreshold) {
+                if (swipeDistance > 0) {
+                    scrollExperiments('left');
+                } else {
+                    scrollExperiments('right');
+                }
+            }
+        }
+
+        // Handle scroll events with debouncing
+        let scrollTimeout;
+        scrollContainer.addEventListener('scroll', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                updateScrollButtons();
+            }, 100);
+        });
+
+        // Initialize button visibility
+        updateScrollButtons();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            updateScrollButtons();
+        });
+    </script>
+</body>
+</html>
